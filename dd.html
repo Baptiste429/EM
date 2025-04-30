@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graphique Canal de Suez</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            background-color: #2c2c2c; /* Fond sombre */
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        button {
+            margin: 20px 0;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .text-container {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, padding 0.5s ease-out;
+            background-color: #1e1e1e;
+            padding: 0 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .text-container.open {
+            max-height: 300px;
+            padding: 20px;
+        }
+
+        .text-container p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #aaaaaa;
+        }
+
+        #chart {
+            width: 900px;
+            height: 600px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Impact de l'élargissement du canal de Suez sur les espèces non indigènes</h1>
+    
+    <!-- Bouton déroulant -->
+    <button id="learn-more">En savoir plus</button>
+    
+    <!-- Texte caché -->
+    <div class="text-container" id="text-container">
+        <p>
+          Le graphique montre l'élargissement du canal de Suez (en m³) et le nombre d'espèces probablement introduites par ce canal depuis son ouverture. On peut observer une forte augmentation du nombre d'espèces non indigènes (ENI) dans la mer Méditerranée, en particulier après les années 1980, lorsque l'élargissement du canal a facilité leur introduction. Les espèces qui arrivent par le canal ont eu un impact significatif sur les écosystèmes marins de la région, modifiant l'équilibre écologique. 
+
+          Le Canal de Suez, qui relie la mer Méditerranée à la mer Rouge, a été ouvert le 17 novembre 1869. Ce projet a révolutionné le commerce maritime en réduisant la distance entre l'Europe et l'Asie. Cependant, cet élargissement a également permis à un grand nombre d'espèces marines exotiques de pénétrer dans la Méditerranée, modifiant ainsi les écosystèmes marins. Le Canal de Suez, qui relie la mer Méditerranée à la mer Rouge, a été ouvert le 17 novembre 1869. 
+        </p>
+        <p>* (ENI) Espèces Non Indigènes</p>
+        <p>
+        </p>
+    </div>
+
+    <!-- Graphique ECharts -->
+    <div id="chart"></div>
+
+    <script>
+        // Script pour le bouton déroulant
+        const button = document.getElementById('learn-more');
+        const textContainer = document.getElementById('text-container');
+
+        button.addEventListener('click', () => {
+            textContainer.classList.toggle('open');
+        });
+
+        // Script pour ECharts
+        var chart = echarts.init(document.getElementById('chart'));
+
+        var years = ['1860', '1880', '1900', '1920', '1940', '1960', '1980', '2000', '2020'];
+        var canalSection = [600, 600, 600, 600, 600, 1200, 2400, 3600, 5400]; // m²
+        var enisCount = [0, 0, 10, 20, 90, 140, 240, 325, 470]; // Nombre d'espèces invasives
+
+        var option = {
+            backgroundColor: '#2c2c2c',
+            title: {
+                text: 'Sources : REABIC - Management of Biological Invasions (Volume 8,N°2)',
+                left: 'center',
+                textStyle: {
+                    color: '#aaaaaa' // Texte blanc
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: '#ffffff', // Fond de l'info-bulle en blanc
+                textStyle: {
+                    color: '#000000' // Texte noir dans l'info-bulle
+                },
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            legend: {
+                data: ['Section du Canal (m²)', 'Nombre d\'ENI'],
+                top: 30,
+                textStyle: {
+                    color: '#ffffff' // Texte blanc
+                }
+            },
+            xAxis: {
+                type: 'category',
+                data: years,
+                name: 'Année',
+                axisLine: {
+                    lineStyle: {
+                        color: '#ffffff' // Ligne blanche
+                    }
+                },
+                axisLabel: {
+                    color: '#ffffff', // Labels blancs
+                    fontWeight: 'bold'
+                }
+            },
+            yAxis: [
+                {
+                    type: 'value',
+                    name: 'Section du Canal (m²)',
+                    position: 'left',
+                    min: 0,
+                    max: 6000,
+                    interval: 1000,
+                    axisLine: {
+                        lineStyle: {
+                            color: '#ffffff' // Ligne blanche
+                        }
+                    },
+                    axisLabel: {
+                        color: '#ffffff' // Labels blancs
+                    }
+                },
+                {
+                    type: 'value',
+                    name: 'Nombre d\'ENI',
+                    position: 'right',
+                    min: 0,
+                    max: 500,
+                    interval: 100,
+                    axisLine: {
+                        lineStyle: {
+                            color: '#ffffff' // Ligne blanche
+                        }
+                    },
+                    axisLabel: {
+                        color: '#ffffff' // Labels blancs
+                    }
+                }
+            ],
+            series: [
+                {
+                    name: 'Section du Canal (m²)',
+                    type: 'bar',
+                    data: canalSection,
+                    itemStyle: {
+                        color: '#007bff' // Barres bleues
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            color: '#0056b3' // Couleur plus foncée au survol
+                        }
+                    }
+                },
+                {
+                    name: 'Nombre d\'ENI',
+                    type: 'line',
+                    data: enisCount,
+                    yAxisIndex: 1,
+                    itemStyle: {
+                        color: 'red'
+                    },
+                    lineStyle: {
+                        width: 2
+                    },
+                    symbolSize: 8,
+                    emphasis: {
+                        itemStyle: {
+                            color: 'black' // Points rouges deviennent noirs au survol
+                        }
+                    }
+                }
+            ]
+        };
+
+        chart.setOption(option);
+    </script>
+</body>
+</html>

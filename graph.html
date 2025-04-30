@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Graphique - Niveau de la mer</title>
+  <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      background-color: #2c2c2c;
+      color: #ffffff;
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      margin-top: 10px;
+      font-size: 40px;
+      text-align: center;
+    }
+    h2 {
+      font-size: 16px;
+      text-align: center;
+      color: #aaaaaa;
+    }
+    #main {
+      width: 95%;
+      max-width: 1400px;
+      height: 700px;
+    }
+    button {
+      margin: 20px 0;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: #ffffff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .text-container {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease-out, padding 0.5s ease-out;
+      background-color: #1e1e1e;
+      padding: 0 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+    .text-container.open {
+      max-height: 300px;
+      padding: 20px;
+    }
+    .text-container p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #aaaaaa;
+    }
+  </style>
+</head>
+<body>
+  <h1>Évolution du niveau de la mer Méditerranée</h1>
+  <button id="learn-more">En savoir plus</button>
+  <div class="text-container" id="text-container">
+    <p>
+      Entre 1993 et 2023, le niveau moyen de la Méditerranée a augmenté de 
+      <strong>2,5 ± 0,8 mm/an</strong>, avec une faible accélération de 
+      <strong>0,01 ± 0,06 mm/an²</strong>. Cette élévation reflète le réchauffement climatique, dû 
+      à l’expansion thermique des océans et à la fonte des glaces.
+    </p>
+    <p>
+      Les données, issues des services Copernicus, sont basées sur l’altimétrie satellitaire, corrigées des biais instrumentaux et des influences locales. Elles montrent une variabilité régionale marquée, influencée par la dynamique océanique, les échanges d’eau et des phénomènes comme l’Oscillation Nord-Atlantique.
+    </p>
+  </div>
+  <div id="main"></div>
+  <h2>Source: Copernicus Marine</h2>
+
+  <script>
+    const button = document.getElementById('learn-more');
+    const textContainer = document.getElementById('text-container');
+
+    button.addEventListener('click', () => {
+      // Basculer la classe "open" pour activer/désactiver le déroulé
+      textContainer.classList.toggle('open');
+      
+      // Modifier le texte du bouton
+      button.textContent = textContainer.classList.contains('open') 
+        ? 'Réduire' 
+        : 'En savoir plus';
+    });
+
+    // Script pour le graphique
+    var chartDom = document.getElementById('main');
+    var myChart = echarts.init(chartDom);
+    var option;
+
+    Papa.parse('DATA/DATA_SEA_LEVEL.csv', {
+      download: true,
+      header: true,
+      complete: function(results) {
+        const rawData = results.data;
+
+        const xData = rawData.map(row => row.time);
+        const yData = rawData.map(row => parseFloat(row.MSL_filtered_GIA_TPA_corrected_adjusted));
+
+        option = {
+          backgroundColor: '#2c2c2c',
+          tooltip: {
+            trigger: 'axis',
+            backgroundColor: '#333',
+            borderColor: '#777',
+            textStyle: { color: '#ffffff' }
+          },
+          xAxis: {
+            type: 'category',
+            data: xData,
+            name: 'Temps',
+            nameLocation: 'middle',
+            nameGap: 30,
+            nameTextStyle: { color: '#ffffff', fontSize: 14 },
+            axisLine: { lineStyle: { color: '#888' } },
+            axisLabel: { color: '#aaaaaa' }
+          },
+          yAxis: {
+            type: 'value',
+            name: 'Niveau moyen de la mer (cm)',
+            nameTextStyle: { color: '#ffffff', fontSize: 14 },
+            axisLine: { lineStyle: { color: '#888' } },
+            axisLabel: { color: '#aaaaaa' },
+            splitLine: { lineStyle: { color: '#444' } }
+          },
+          series: [
+            {
+              type: 'line',
+              data: yData,
+              smooth: true,
+              lineStyle: {
+                width: 3,
+                color: { type: 'linear', x: 0, y: 0, x2: 1, y2: 0, colorStops: [
+                  { offset: 0, color: '#007bff' },
+                  { offset: 1, color: '#4a9cdd' }
+                ]}
+              },
+              areaStyle: {
+                color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [
+                  { offset: 0, color: 'rgba(114, 217, 255, 0.3)' },
+                  { offset: 1, color: 'rgba(44, 44, 44, 0.1)' }
+                ]}
+              },
+              itemStyle: { color: '#ffffff' }
+            }
+          ],
+          animationDuration: 5000,
+          animationEasing: 'cubicOut'
+        };
+
+        myChart.setOption(option);
+      }
+    });
+  </script>
+</body>
+</html>

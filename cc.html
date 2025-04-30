@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L'évolution de la mer Méditerranée</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            color: #ffffff;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease;
+            animation: slideDown 1s ease forwards;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            color: #fff;
+            opacity: 0;
+            transform: translateY(-50px);
+            animation: fadeSlideIn 1.5s ease forwards;
+        }
+
+        header a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+            margin: 0 1rem;
+            transition: color 0.3s ease;
+        }
+
+        header a:hover {
+            color: #007bff;
+        }
+
+        /* Le menu burger (3 lignes) */
+.menu-burger {
+    display: none;
+    flex-direction: column;
+    gap: 0.3rem;
+    cursor: pointer;
+}
+
+.menu-burger div {
+    width: 25px;
+    height: 3px;
+    background-color: #fff;
+    transition: transform 0.3s;
+}
+
+/* Le menu pour les mobiles */
+#menu {
+    display: none;
+    flex-direction: column;
+    gap: 1rem;
+    position: absolute;
+    top: 100%;
+    right: 2rem;
+    background: rgba(0, 0, 0, 0);
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+#menu a {
+    color: #fff;
+    text-decoration: none;
+}
+
+/* Responsive : afficher le burger sur petits écrans */
+@media (max-width: 768px) {
+    nav {
+        display: none;
+    }
+
+    .menu-burger {
+        display: flex;
+    }
+}
+
+        section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.3s ease;
+        }
+
+        section h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            animation: fadeIn 1.5s ease;
+        }
+
+        section p {
+            font-size: 1.2rem;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            animation: fadeIn 2s ease;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: #007bff;
+            color: #fff;
+            font-size: 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #007bff;
+        }
+
+        .section-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+            filter: brightness(0.5);
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+
+        section:hover .section-bg {
+            transform: scale(1.05);
+            filter: brightness(0.7);
+        }
+/* Section Pollution avec vidéo */
+#pollution {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    padding: 20px;
+}
+
+#pollution .section-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1; /* Place la vidéo derrière le contenu */
+}
+
+#pollution h1, #pollution p, #pollution .btn {
+    position: relative;
+    z-index: 1; /* Contenu au-dessus de la vidéo */
+    padding: 10px;
+    border-radius: 5px;
+}
+/* Section homen avec vidéo */
+#home {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    padding: 20px;
+}
+
+#home .section-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1; /* Place la vidéo derrière le contenu */
+}
+
+#home h1, #home p, #home .btn {
+    position: relative;
+    z-index: 1; /* Contenu au-dessus de la vidéo */
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Autres sections avec images */
+#temperature, #sea-level {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    padding: 20px;
+}
+
+#temperature .section-bg {
+    background: url('images/temp.jpg') no-repeat center center/cover;
+}
+
+#sea-level .section-bg {
+    background: url('images/level2.jpg') no-repeat center center/cover;
+}
+#pollution .section-bg {
+    background: url('images/poisson.jpg') no-repeat center center/cover;
+}
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: #ffffff;
+            color: #000000;
+        }
+
+        footer a {
+            color: #ffffff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #ffffff;
+        }
+
+        /* Animations */
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+#main-content {
+    text-align: center;
+    padding: 20px;
+    background: #f4f4f4;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    opacity: 0; /* Contenu caché initialement */
+    transition: opacity 0.5s ease-in-out; /* Apparition progressive */
+}
+
+/* Animation des vagues */
+#wave-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: transparent; /* Fond transparent */
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.wave {
+    position: absolute;
+    width: 100%;
+    animation: wave-clap 1.5s ease-in-out forwards; /* Animation synchronisée */
+}
+/* Vague en haut */
+.wave-top {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    transform: translateY(-100%); /* Commence hors de l'écran */
+    animation: wave-top-clap 1.5s ease-in-out forwards; /* La vague du haut monte */
+}
+
+/* Vague en bas */
+.wave-bottom {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    transform: translateY(100%); /* Commence hors de l'écran */
+    animation: wave-bottom-clap 1.5s ease-in-out forwards; /* La vague du bas descend */
+}
+
+/* Animation pour la vague du haut */
+@keyframes wave-top-clap {
+    0% {
+        transform: translateY(0%); /* Position initiale */
+    }
+    100% {
+        transform: translateY(-100%); /* Monte hors de l'écran */
+    }
+}
+
+/* Animation pour la vague du bas */
+@keyframes wave-bottom-clap {
+    0% {
+        transform: translateY(0%); /* Position initiale */
+    }
+    100% {
+        transform: translateY(100%); /* Descend hors de l'écran */
+    }
+}
+
+
+/* Animation des vagues */
+@keyframes wave-clap {
+    0% {
+        transform: translateY(0%);
+    }
+    100% {
+        transform: translateY(-100%);
+    }
+}
+    </style>
+</head>
+<body>
+    <div id="wave-loader">
+        <!-- Vagues en haut -->
+        <svg class="wave wave-top" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+            <path fill="white" d="M0,128L48,112C96,96,192,64,288,69.3C384,75,480,117,576,144C672,171,768,181,864,170.7C960,160,1056,128,1152,112C1248,96,1344,96,1392,96L1440,96L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
+        </svg>
+        <!-- Vagues en bas -->
+        <svg class="wave wave-bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+            <path fill="white" d="M0,192L48,176C96,160,192,128,288,122.7C384,117,480,139,576,149.3C672,160,768,160,864,149.3C960,139,1056,117,1152,122.7C1248,128,1344,160,1392,176L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+    </div>
+    <header>
+        <h1>L'ÉVOLUTION DE LA MER MÉDITERRANÉE</h1>
+        <nav>
+            <a href="#pollution">ÉSPECES INVASIVES</a>
+            <a href="#temperature">TEMPÉRATURE</a>
+            <a href="#sea-level">NIVEAU DE LA MER</a>
+        </nav>
+        <div class="menu-burger" onclick="toggleMenu()">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div id="menu">
+            <a href="#pollution">ÉSPECES INVASIVES</a>
+            <a href="#temperature">TEMPÉRATURE</a>
+            <a href="#sea-level">NIVEAU DE LA MER</a>
+        </div>
+    </header>
+    
+
+    <section id="home">
+        <video autoplay muted loop playsinline class="section-bg">
+            <source src="videos/home.mp4" type="video/mp4">
+            Votre navigateur ne supporte pas les vidéos HTML5.
+        </video>
+        <h1>Données et tendances de la Méditerranée</h1>
+        <p>Une vision globale des défis environnementaux façonnant l'avenir de la mer Méditerranée</p>
+    </section>
+
+    <section id="pollution">
+        <div class="section-bg"></div>
+        <h1>Les éspeces invasives en Méditerranée</h1>
+        <p>Plongée au cœur des espèces invasives qui redéfinissent la Méditerranée.</p>
+        <a href="tt.html" class="btn">Découvrir</a>
+    </section>
+    
+    <section id="temperature">
+        <div class="section-bg"></div>
+        <h1>Température</h1>
+        <p>Découvrez les variations de température à travers les années.</p>
+        <a href="newtemp.html" class="btn">Découvrir</a>
+    </section>
+    
+    <section id="sea-level">
+        <div class="section-bg"></div>
+        <h1>Niveau de la Mer</h1>
+        <p>Découvrez les tendances de l'élévation du niveau de la mer.</p>
+        <a href="graph.html" class="btn">Découvrir</a>
+    </section>
+    
+
+    <footer>
+        &copy; 2024 Suivi de l'Évolution de la Méditerranée. Baptiste Bastelica MMI2
+    </footer>
+
+    <script>
+        function toggleMenu() {
+    const menu = document.getElementById('menu');
+    const burger = document.querySelector('.menu-burger');
+    menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+
+    // Animation des lignes du menu burger
+    const lines = burger.querySelectorAll('div');
+    if (menu.style.display === 'flex') {
+        lines[0].style.transform = 'rotate(45deg) translateY(8px)';
+        lines[1].style.opacity = '0';
+        lines[2].style.transform = 'rotate(-45deg) translateY(-8px)';
+    } else {
+        lines[0].style.transform = 'rotate(0)';
+        lines[1].style.opacity = '1';
+        lines[2].style.transform = 'rotate(0)';
+    }
+}
+
+        // Interaction des sections
+        const sections = document.querySelectorAll("section");
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("active");
+                    } else {
+                        entry.target.classList.remove("active");
+                    }
+                });
+            },
+            { threshold: 0.2 }
+        );
+
+        sections.forEach((section) => observer.observe(section));
+        document.addEventListener("DOMContentLoaded", () => {
+    const waveLoader = document.getElementById("wave-loader");
+    const mainContent = document.getElementById("main-content");
+
+    // Délai pour cacher les vagues et afficher le contenu
+    setTimeout(() => {
+        waveLoader.style.opacity = "0";
+        waveLoader.style.transition = "opacity 0.5s ease-out";
+        setTimeout(() => {
+            waveLoader.style.display = "none";
+            mainContent.style.opacity = "1"; // Apparition du contenu
+            document.body.style.overflow = "auto"; // Permet le défilement
+        }, 500);
+    }, 1500); // Durée de l'animation des vagues
+});
+
+    </script>
+</body>
+</html>
